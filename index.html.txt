@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Image + Live Clock</title>
+  <style>
+    html,body{height:100%;margin:0}
+    .hero{
+      position:relative;
+      width:100%;
+      height:100vh;
+      background: url('your-image.jpg') center/cover no-repeat;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    #clock{
+      position:absolute;
+      top:20px;            /* same position as original */
+      right:20px;          /* same position as original */
+      padding:10px 14px;
+      border-radius:10px;
+      background: rgba(0,0,0,0.35); /* same frosted look */
+      color:#fff;
+      font-weight:600;
+      font-size:28px;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      line-height:1;
+    }
+    .tz{
+      display:block;
+      font-size:11px;
+      opacity:.85;
+      margin-top:6px;
+      font-weight:400;
+      white-space:nowrap; /* prevents awkward wrapping in small boxes */
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <div id="clock">
+      <span id="time">00:00:00 AM</span>
+      <span class="tz" id="date">Wednesday, January 1, 1970</span>
+    </div>
+  </div>
+
+  <script>
+    // Universal/local viewer time (no hardcoded timezone)
+    function two(n){ return String(n).padStart(2,'0'); }
+
+    function updateClock(){
+      const now = new Date();
+
+      // 12-hour time with AM/PM and seconds
+      let hours = now.getHours();
+      const minutes = two(now.getMinutes());
+      const seconds = two(now.getSeconds());
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12; // convert 0 -> 12
+
+      document.getElementById('time').textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
+
+      // Day + full date (local)
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById('date').textContent = now.toLocaleDateString(undefined, options);
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
+</body>
+</html>
